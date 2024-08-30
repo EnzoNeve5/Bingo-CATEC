@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cartela de Bingo</title>
+    <style>
+    body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin: 20px;
+    }
+
+    button {
+        background-color: grey;
+        color: white;
+        border: 5px solid white;
+        width: 160px;
+        height: 40px;
+    }
+
+    #bingo-card {
+        display: grid;
+        grid-template-columns: repeat(5, 60px);
+        grid-gap: 5px;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    #bingo-card div {
+        width: 60px;
+        height: 60px;
+        border: 1px solid #000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 18px;
+        background-color: #fff;
+        cursor: pointer;
+    }
+
+    #bingo-card div.clicked {
+        background-color: #ffc107;
+    }
+
+    </style>
+</head>
+<body>
+    <h1>Cartela de Bingo</h1>
+    <div id="bingo-card"></div>
+    <button onclick="generateBingoCard()">Gerar Nova Cartela</button>
+    <script>
+   function generateBingoCard() {
+        const bingoCard = document.getElementById('bingo-card');
+        bingoCard.innerHTML = '';
+
+        const columns = {
+            B: generateUniqueNumbers(1, 15, 5),
+            I: generateUniqueNumbers(16, 30, 5),
+            N: generateUniqueNumbers(31, 45, 5),
+            G: generateUniqueNumbers(46, 60, 5),
+            O: generateUniqueNumbers(61, 75, 5),
+        };
+
+        for (let i = 0; i < 5; i++) {
+            addNumberToCard(bingoCard, columns.B[i]);
+            addNumberToCard(bingoCard, columns.I[i]);
+            addNumberToCard(bingoCard, columns.N[i]);
+            addNumberToCard(bingoCard, columns.G[i]);
+            addNumberToCard(bingoCard, columns.O[i]);
+        }
+    }
+
+    function generateUniqueNumbers(min, max, count) {
+        const numbers = new Set();
+        while (numbers.size < count) {
+            const number = Math.floor(Math.random() * (max - min + 1)) + min;
+            numbers.add(number);
+        }
+        return Array.from(numbers);
+    }
+
+    function addNumberToCard(card, number) {
+        const cell = document.createElement('div');
+        cell.textContent = number;
+        cell.addEventListener('click', handleCellClick);
+        card.appendChild(cell);
+    }
+
+    function handleCellClick(event) {
+        const cell = event.target;
+        let clickCount = parseInt(cell.dataset.clickCount, 10);
+        cell.dataset.clickCount = clickCount;
+        cell.classList.add('clicked');
+    }
+    window.onload = generateBingoCard;
+    </script>
+</body>
+</html>
